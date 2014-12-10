@@ -23,13 +23,22 @@ import java.util.logging.Logger;
 public class DataModel {
     static String[] words; 
     static int numberOfWords; 
-    static final int wordLengthLimit = 22; 
+    static final int wordLengthLimit = 4; 
     static HashMap<String, Boolean> bloomFilter = new HashMap<String, Boolean>(); 
     static HashMap<String, Integer> wordToIndex = new HashMap<String, Integer>(); 
     
     public static void initiateModel(String rawDataPath) throws IOException{
-        File hamFile = new File(rawDataPath + "/Ham");
-        File spamFile = new File(rawDataPath + "/Spam");
+        File hamFile;
+        File spamFile;  
+        
+        if(SpamFilter.small){
+            hamFile = new File(rawDataPath + "SmallHam");
+            spamFile = new File(rawDataPath + "SmallSpam");
+        }
+        else{
+            hamFile = new File(rawDataPath + "Ham");
+            spamFile = new File(rawDataPath + "Spam");
+        }
         
         // Find all words from the ham emails
         for(File file: hamFile.listFiles()){
@@ -66,6 +75,7 @@ public class DataModel {
         for(String word: bloomFilter.keySet()){
             words[index] = word; 
             wordToIndex.put(word, index); 
+            index++; 
         }
         
         //JUST FOR FUN
