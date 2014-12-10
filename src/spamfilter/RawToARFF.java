@@ -30,9 +30,22 @@ public class RawToARFF {
     public static  void createARFF() throws IOException{
         PrintWriter writer = null;
         try {
-            writer = new PrintWriter("Data/Weka/Data/data.arff", "UTF-8"); 
+            writer = new PrintWriter("Data/Weka/Data/Train.arff", "UTF-8"); 
             writeHeader(writer);
-            writeBody(writer);
+            writeBody(writer, "/HamTrain", "/SpamTrain");
+        } catch (FileNotFoundException ex) {
+            System.err.println(ex.toString()); 
+        } catch (UnsupportedEncodingException ex) {
+            System.err.println(ex.toString()); 
+        } finally {
+            writer.close();
+        }
+        
+        //same for testdata
+        try {
+            writer = new PrintWriter("Data/Weka/Data/Test.arff", "UTF-8"); 
+            writeHeader(writer);
+            writeBody(writer, "/HamTest", "/SpamTest");
         } catch (FileNotFoundException ex) {
             System.err.println(ex.toString()); 
         } catch (UnsupportedEncodingException ex) {
@@ -52,9 +65,14 @@ public class RawToARFF {
         writer.println("@DATA"); 
     }
     
-    private static void writeBody(PrintWriter writer) throws IOException{
-        File hamFile = new File("Data/Raw/Ham");
-        File spamFile = new File("Data/Raw/Spam");
+    private static void writeBody(PrintWriter writer, String hamPath, String spamPath) throws IOException{
+        File hamFile;
+        File spamFile;  
+        
+
+        hamFile = new File(SpamFilter.RawDataPath + hamPath);
+        spamFile = new File(SpamFilter.RawDataPath + spamPath);
+        
         Scanner scanner; 
         int[] attributes = new int[DataModel.numberOfWords]; 
         
