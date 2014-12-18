@@ -15,11 +15,8 @@ import java.util.logging.Logger;
  * @author alex
  */
 public class SpamFilter {
-    static final String SmallHam = "SmallHam"; 
-    static final String SmallSpam = "SmallSpam";
-    static final String NormalSpam = "Spam";
-    static final String NormalHam = "Ham";
     static boolean small = false; 
+    static String numberOfDataSet = "1"; 
     static final String RawDataPath = "Data/Raw/"; 
     static final String arffTrainFile = "Data/Weka/Data/Train.arff"; 
     static final String arffTestFile = "Data/Weka/Data/Test.arff"; 
@@ -32,8 +29,11 @@ public class SpamFilter {
         //Build the data model
         try {
             DataModel.initiateModel(RawDataPath);
-            RawToARFF.createARFF();
-            TrainAndTestData.trainData(); 
+           // RawToARFF.createARFF();
+           // TrainAndTestData.trainData(); 
+            
+            WordStatistics wordStat = new WordStatistics(RawDataPath +"HamTest" + numberOfDataSet, RawDataPath +"SpamTest" + numberOfDataSet); 
+            wordStat.getStatistics(); 
             
         } catch (IOException ex) {
             System.out.println(ex.toString()); 

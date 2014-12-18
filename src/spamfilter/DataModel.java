@@ -1,7 +1,10 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Defines the feature extractor model. 
+ * 
+ * The model is determined by iterating over all files and counting the number
+ * of relevant words and creating a bloomfilter for these words. 
+ *
+ * The bloom filter and other parameters are then used globally in this project. 
  */
 
 package spamfilter;
@@ -34,8 +37,8 @@ public class DataModel {
         File spamFile;  
         
 
-        hamFile = new File(rawDataPath + "HamTrain");
-        spamFile = new File(rawDataPath + "SpamTrain");
+        hamFile = new File(rawDataPath + "HamTrain" + SpamFilter.numberOfDataSet);
+        spamFile = new File(rawDataPath + "SpamTrain" + SpamFilter.numberOfDataSet);
 
         //Build stoplist
         File stopListFile = new File(stopListPath); 

@@ -1,7 +1,6 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Uses the weka library(in this case a naive bayes classifier) to train a model 
+ * and test it with the testdata. 
  */
 
 package spamfilter;
@@ -18,6 +17,7 @@ import weka.classifiers.bayes.NaiveBayesSimple;
 import weka.classifiers.Evaluation; 
 import weka.classifiers.bayes.NaiveBayesMultinomial;
 import weka.classifiers.functions.LibSVM; 
+import weka.core.Instance;
 
 /**
  *
@@ -59,7 +59,6 @@ public class TrainAndTestData {
             }
         }
         
-        
         trainData.setClassIndex(trainData.numAttributes() -1);
         testData.setClassIndex(testData.numAttributes() -1); 
         
@@ -72,15 +71,16 @@ public class TrainAndTestData {
         Evaluation eval = new Evaluation(trainData); 
         eval.evaluateModel(naive, testData); 
         System.out.println("summary " + eval.toSummaryString());
-    
-        //Support vector machines rbf kernels
-        /*LibSVM svm = new LibSVM(); 
-        svm.buildClassifier(trainData);
+        double[][] confMatrix = eval.confusionMatrix(); 
         
-        //Testing on testdata
-        Evaluation eval = new Evaluation(trainData); 
-        eval.evaluateModel(svm, testData); 
-        System.out.println("summary " + eval.toSummaryString());*/
+        for(int i = 0; i < testData.numInstances(); i++){
+            double realClass = testData.instance(i).classValue(); 
+            if(naive.classifyInstance(testData.instance(i)) != realClass){
+                System.out.println("Instance number " + i);
+                System.out.println("RealClass " + realClass);
+                System.out.println("Classified as: " + naive.classifyInstance(testData.instance(i)));
+            }
+        }
     
     }
     

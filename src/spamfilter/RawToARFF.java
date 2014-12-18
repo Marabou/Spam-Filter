@@ -1,7 +1,7 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Will transform the raw data to arff files. 
+ *
+ * The Datamodel parameters must be initialized before doing this. 
  */
 
 package spamfilter;
@@ -32,7 +32,7 @@ public class RawToARFF {
         try {
             writer = new PrintWriter("Data/Weka/Data/Train.arff", "UTF-8"); 
             writeHeader(writer);
-            writeBody(writer, "/HamTrain", "/SpamTrain");
+            writeBody(writer, "/HamTrain"+ SpamFilter.numberOfDataSet, "/SpamTrain"+ SpamFilter.numberOfDataSet);
         } catch (FileNotFoundException ex) {
             System.err.println(ex.toString()); 
         } catch (UnsupportedEncodingException ex) {
@@ -45,7 +45,7 @@ public class RawToARFF {
         try {
             writer = new PrintWriter("Data/Weka/Data/Test.arff", "UTF-8"); 
             writeHeader(writer);
-            writeBody(writer, "/HamTest", "/SpamTest");
+            writeBody(writer, "/HamTest" + SpamFilter.numberOfDataSet, "/SpamTest"+ SpamFilter.numberOfDataSet);
         } catch (FileNotFoundException ex) {
             System.err.println(ex.toString()); 
         } catch (UnsupportedEncodingException ex) {
