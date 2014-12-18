@@ -23,9 +23,11 @@ import java.util.logging.Logger;
 public class DataModel {
     static String[] words; 
     static int numberOfWords; 
-    static final int wordLengthLimit = 5; 
+    static final int wordLengthLimit = 2; 
     static HashMap<String, Boolean> bloomFilter = new HashMap<String, Boolean>(); 
     static HashMap<String, Integer> wordToIndex = new HashMap<String, Integer>(); 
+    static HashMap<String, Boolean> stopList = new HashMap<String, Boolean>(); 
+    static String stopListPath = "Data/Stopwords/StopList_MySQL";
     
     public static void initiateModel(String rawDataPath) throws IOException{
         File hamFile;
@@ -35,6 +37,14 @@ public class DataModel {
         hamFile = new File(rawDataPath + "HamTrain");
         spamFile = new File(rawDataPath + "SpamTrain");
 
+        //Build stoplist
+        File stopListFile = new File(stopListPath); 
+        BufferedReader stopListReader = new BufferedReader(new FileReader(stopListFile)); 
+        String stopLine = stopListReader.readLine(); 
+        while(stopLine != null){
+            stopList.put(stopLine, Boolean.TRUE);
+            stopLine = stopListReader.readLine(); 
+        }
         
         // Find all words from the ham emails
         for(File file: hamFile.listFiles()){
@@ -71,25 +81,21 @@ public class DataModel {
         for(String word: bloomFilter.keySet()){
             words[index] = word; 
             wordToIndex.put(word, index); 
-            index++; 
+            index++;
         }
-        
-        //JUST FOR FUN
-        /*for(String word: bloomFilter.keySet()){
-            System.out.println(word); 
-        }
-        System.out.println(bloomFilter.size()); */
     }
     
     /**
      * Builds the bloom filter by receiving text input
+     * Ignores words in the stoplist
      * 
      * @param fileText 
      */
     private static void buildBloomFilter(String fileText){
         Scanner textScanner = new Scanner(fileText); 
         String current = textScanner.next(); 
-        while(current != null){
+        current = current.toLowerCase(); 
+        while(current != null  && stopList.get(current) == null ){ //If not in Stoplist
             if(current.length() >= wordLengthLimit){
                 if(bloomFilter.get(current) == null){
                     try{
